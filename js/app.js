@@ -1,27 +1,10 @@
-//Fork the Repository: Make sure you're signed into github.com, then visit our repo and 
-//click on the "Fork" button in the top right. 
-//After your fork has been created, you'll want to clone it to your local computer.
-//Familiarize Yourself with The Layout and CSS: 
-//You'll need to use jQuery in the project to listen for when users submit guesses. 
-//You should spend a few minutes looking over the HTML and 
-//CSS files and using Developer tools to inspect page element.
-
-
-//Break the App Logic Down Into Steps and Write Functions: 
-//You'll need a newGame() function that does everything necessary to start a new game. 
-//This function will itself need to call other functions to take care of specific tasks — 
-//for instance, setting the randomly generated secret number. 
-//You should break the application logic down into discrete steps, 
-//then work on one step at a time.
-
 $(document).ready(function(){
 
 	var userInput;
 	var previousGuess = [];
 	var listGuess;
-	var count;
+	var count = 0;
 	var randomNumber;
-	var diff;
 	/*--- Display information modal box ---*/
 
 	$(".what").click(function(){
@@ -37,78 +20,67 @@ $(document).ready(function(){
   		e.preventDefault();
   		userInput = $('#userGuess').val();
   	
-  		capturePreviousGuess();
   		previousGuess.push(userInput);
+  		capturePreviousGuess();
   		console.log("previous Guess is: " + previousGuess[previousGuess.length - 1]);
   		console.log("user input is: " + userInput);
   		newGame();
-  		generateRandom();
   	});
 
-  	// $('.new').click(newGame);
   	$('.new').click(function() {
   		resetInput();
   	});
+
+  	generateRandom();
   
 	function newGame(){
-
 		if (userInput < 1 || userInput > 100) {
 			alert("Input not valid! Please enter a number between 1 and 100.");
 			return false;
 		}
 		else {
 			listNum();
-			//capturePreviousGuess();
-			//count();
+			diffNum();
+			countUp();
+			$('#userGuess').val('');
 		}
 	}
 
 	function generateRandom(){
 		randomNumber = Math.floor(Math.random() * 100) + 1;
-		//randomNumber = Math.floor(Math.random() *100) + 1;
 		console.log("random number is: " + randomNumber);
-		//compare();
-		diffNum();
 	}
 
-
-	/*function compare(){
-		diff = Math.abs(userInput - randomNumber);
-		console.log("diff = " + diff);
-		diffNum();
-	}*/
-
 	function diffNum(){
-		console.log("user input in diffNum = " + userInput);
-		console.log("random number " + randomNumber);
+		var diff = Math.abs(randomNumber - userInput);
+		console.log("diff = " + diff);
 		if (userInput == randomNumber){
-			$('#feedback h2').text("You Win!");
+			$('#feedback').text("You Win!");
 		}
-		else if (userInput - randomNumber <= 5){
-			$('#feedback h2').text("Hot!");
+		else if (diff <= 5){
+			$('#feedback').text("Hot!");
 		}
-		else if (userInput - randomNumber > 5 && userInput - randomNumber < 20){
-			$('#feedback h2').text("Warm!");
+		else if (diff <= 15){
+			$('#feedback').text("Warm!");
 		}
-		else if (userInput - randomNumber > 21 && userInput - randomNumber < 30){
-			$('#feedback h2').text("Cold!");
+		else if (diff <= 25){
+			$('#feedback').text("Cold!");
 		}
 		else {
-			$('#feedback h2').text("Way Off!");
+			$('#feedback').text("Way Off!");
 		}
 	}
 
 	//captures users entered number and keeps track of each number used
 	function capturePreviousGuess(){
-		console.log($.inArray(userInput, previousGuess));
-		if ($.inArray(userInput, previousGuess) != -1 ) {
-			$('#feedback').text("Already used that number!");
+		//if ($.inArray(userInput, previousGuess) == -1 ) 
+		if (previousGuess.indexOf(previousGuess) != -1){
+			console.log(previousGuess);
+			$('#feedback').text("Make your guess!");
 		}
 		else {
-			$('feedback').text("Make your guess!");{
+			$('#feedback').text("Already used that number!");
 			}
-			listNum();
-		}
 	}
 
 	//list the users input in the guessList element
@@ -117,18 +89,20 @@ $(document).ready(function(){
 	}
 
 	//increase the count by 1 each time the user submits an input
-	/*function count(){
-		//if (userInput != ''){
-
+	function countUp(){
 		count++;
-	}*/
-
+		$('#count').text(count);
+	}
 
 	function resetInput(){
 		$('#userGuess').val('');
 		count = 0;
+		$('#count').empty();
 		previousGuess = [];
-		$('feedback h2').text('Make your guess!');
+		$('#feedback').text('Make your guess!');
+		$('#guessList').empty();
 	}
 });
+
+
 
