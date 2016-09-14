@@ -69,7 +69,6 @@ $(document).ready(function(){
 	//captures users entered number and keeps track of each number used
 	function capturePreviousGuess(){
 		if (previousGuess.indexOf(userInput) == -1){
-			console.log('in if block');
 			diffNum();
 			listNum();
 			previousGuess.push(userInput);
